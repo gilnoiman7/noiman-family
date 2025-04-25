@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="he">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>משפחת נוימן</title>
+    <style>
+      body {
+        font-family: "Varela Round", sans-serif;
+        background: linear-gradient(135deg, #fdfbfb, #ebedee);
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-height: 100vh;
+        direction: rtl;
+      }
+      header {
+        width: 100%;
+        background: linear-gradient(to right, #2575fc, #6a11cb);
+        padding: 30px 0;
+        text-align: center;
+        color: white;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+      }
+      h1 {
+        margin: 0;
+        font-size: 2.5rem;
+      }
+      .tabs {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin-top: 20px;
+      }
+      .tab-button {
+        background: white;
+        border: 2px solid #6a11cb;
+        color: #6a11cb;
+        margin: 5px;
+        padding: 10px 20px;
+        border-radius: 25px;
+        cursor: pointer;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+      }
+      .tab-button:hover,
+      .tab-button.active {
+        background: #6a11cb;
+        color: white;
+      }
+      .tab-content {
+        display: none;
+        width: 90%;
+        max-width: 900px;
+        background: white;
+        margin-top: 20px;
+        padding: 30px;
+        border-radius: 16px;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+      }
+      .tab-content.active {
+        display: block;
+      }
+      form textarea,
+      form input[type="file"] {
+        width: 100%;
+        margin: 10px 0;
+        padding: 12px;
+        font-size: 1rem;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+      }
+      form button {
+        background: #28a745;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 10px;
+        margin-top: 10px;
+        cursor: pointer;
+        font-size: 1rem;
+        transition: background 0.3s;
+      }
+      form button:hover {
+        background: #218838;
+      }
+      .post {
+        background: #f1f3f5;
+        padding: 20px;
+        margin-top: 20px;
+        border-radius: 12px;
+        position: relative;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+      .post img,
+      .post video {
+        max-width: 100%;
+        margin-top: 10px;
+        border-radius: 8px;
+      }
+      .delete-button {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        background: #dc3545;
+        border: none;
+        color: white;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        font-size: 1.2rem;
+        cursor: pointer;
+        transition: background 0.3s;
+      }
+      .delete-button:hover {
+        background: #c82333;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>שיר אהובה שלנו - המשפחה מחכה לסיפורים!</h1>
+    </header>
+
+    <div class="tabs">
+      <button class="tab-button active" data-tab="mom">אמא</button>
+      <button class="tab-button" data-tab="nati">אבא</button>
+      <button class="tab-button" data-tab="nir">ניר</button>
+      <button class="tab-button" data-tab="gil">גיל</button>
+      <button class="tab-button" data-tab="shir">שיר</button>
+      <button class="tab-button" data-tab="aviv">אביב</button>
+      <button class="tab-button" data-tab="itamar">איתמר</button>
+      <button class="tab-button" data-tab="neta">נטע</button>
+      <button class="tab-button" data-tab="max">מקס</button>
+    </div>
+
+    <div id="mom" class="tab-content active"></div>
+    <div id="nati" class="tab-content"></div>
+    <div id="nir" class="tab-content"></div>
+    <div id="gil" class="tab-content"></div>
+    <div id="shir" class="tab-content"></div>
+    <div id="aviv" class="tab-content"></div>
+    <div id="itamar" class="tab-content"></div>
+    <div id="neta" class="tab-content"></div>
+    <div id="max" class="tab-content"></div>
+
+    <script>
+      const tabs = document.querySelectorAll(".tab-button");
+      const contents = document.querySelectorAll(".tab-content");
+
+      tabs.forEach((tab) => {
+        tab.addEventListener("click", () => {
+          tabs.forEach((t) => t.classList.remove("active"));
+          contents.forEach((c) => c.classList.remove("active"));
+          tab.classList.add("active");
+          document.getElementById(tab.dataset.tab).classList.add("active");
+        });
+      });
+
+      contents.forEach((content) => {
+        const form = document.createElement("form");
+        const textarea = document.createElement("textarea");
+        textarea.placeholder = "כתוב הודעה...";
+        textarea.required = true;
+        const fileInput = document.createElement("input");
+        fileInput.type = "file";
+        fileInput.accept = "image/*,video/*";
+        const button = document.createElement("button");
+        button.type = "submit";
+        button.textContent = "העלה";
+
+        form.appendChild(textarea);
+        form.appendChild(fileInput);
+        form.appendChild(button);
+        content.appendChild(form);
+
+        const postsDiv = document.createElement("div");
+        postsDiv.className = "posts";
+        content.appendChild(postsDiv);
+
+        const storageKey = "posts_" + content.id;
+
+        function loadPosts() {
+          postsDiv.innerHTML = "";
+          const posts = JSON.parse(localStorage.getItem(storageKey)) || [];
+          posts.forEach((post, index) => {
+            const postDiv = document.createElement("div");
+            postDiv.className = "post";
+            const deleteBtn = document.createElement("button");
+            deleteBtn.textContent = "×";
+            deleteBtn.className = "delete-button";
+            deleteBtn.addEventListener("click", () => {
+              posts.splice(index, 1);
+              localStorage.setItem(storageKey, JSON.stringify(posts));
+              loadPosts();
+            });
+            postDiv.appendChild(deleteBtn);
+            const textP = document.createElement("p");
+            textP.textContent = post.text;
+            postDiv.appendChild(textP);
+            if (post.file) {
+              if (post.fileType.startsWith("image/")) {
+                const img = document.createElement("img");
+                img.src = post.file;
+                postDiv.appendChild(img);
+              } else if (post.fileType.startsWith("video/")) {
+                const video = document.createElement("video");
+                video.src = post.file;
+                video.controls = true;
+                postDiv.appendChild(video);
+              }
+            }
+            postsDiv.appendChild(postDiv);
+          });
+        }
+
+        loadPosts();
+
+        form.addEventListener("submit", (e) => {
+          e.preventDefault();
+          const text = textarea.value.trim();
+          const file = fileInput.files[0];
+
+          if (!text && !file) return;
+
+          const reader = new FileReader();
+          reader.onload = function () {
+            const posts = JSON.parse(localStorage.getItem(storageKey)) || [];
+            posts.push({
+              text,
+              file: reader.result,
+              fileType: file.type,
+            });
+            localStorage.setItem(storageKey, JSON.stringify(posts));
+            loadPosts();
+          };
+
+          if (file) {
+            reader.readAsDataURL(file);
+          } else {
+            const posts = JSON.parse(localStorage.getItem(storageKey)) || [];
+            posts.push({ text });
+            localStorage.setItem(storageKey, JSON.stringify(posts));
+            loadPosts();
+          }
+
+          textarea.value = "";
+          fileInput.value = "";
+        });
+      });
+    </script>
+  </body>
+</html>
