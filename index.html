@@ -1,296 +1,319 @@
 <!DOCTYPE html>
 <html lang="he">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>משפחת נוימן</title>
-  <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-database-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-storage-compat.js"></script>
-  <style>
-    body {
-      font-family: "Varela Round", sans-serif;
-      background: linear-gradient(135deg, #fdfbfb, #ebedee);
-      margin: 0;
-      padding: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      min-height: 100vh;
-      direction: rtl;
-    }
-    header {
-      width: 100%;
-      background: linear-gradient(to right, #2575fc, #6a11cb);
-      padding: 30px 0;
-      text-align: center;
-      color: white;
-      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-    }
-    h1 {
-      margin: 0;
-      font-size: 2.5rem;
-    }
-    .tabs {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      margin-top: 20px;
-    }
-    .tab-button {
-      background: white;
-      border: 2px solid #6a11cb;
-      color: #6a11cb;
-      margin: 5px;
-      padding: 10px 20px;
-      border-radius: 25px;
-      cursor: pointer;
-      font-size: 1rem;
-      transition: all 0.3s ease;
-    }
-    .tab-button:hover, .tab-button.active {
-      background: #6a11cb;
-      color: white;
-    }
-    .tab-content {
-      display: none;
-      width: 90%;
-      max-width: 900px;
-      background: white;
-      margin-top: 20px;
-      padding: 30px;
-      border-radius: 16px;
-      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-    }
-    .tab-content.active {
-      display: block;
-    }
-    form textarea, form input[type="file"] {
-      width: 100%;
-      margin: 10px 0;
-      padding: 12px;
-      font-size: 1rem;
-      border: 1px solid #ccc;
-      border-radius: 10px;
-    }
-    form button {
-      background: #28a745;
-      color: white;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 10px;
-      margin-top: 10px;
-      cursor: pointer;
-      font-size: 1rem;
-      transition: background 0.3s;
-    }
-    form button:hover {
-      background: #218838;
-    }
-    .post {
-      background: #f1f3f5;
-      padding: 20px;
-      margin-top: 20px;
-      border-radius: 12px;
-      position: relative;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    }
-    .post img, .post video {
-      max-width: 100%;
-      margin-top: 10px;
-      border-radius: 8px;
-    }
-    .post .timestamp {
-      font-size: 0.8rem;
-      color: #555;
-      margin-top: 10px;
-    }
-    .delete-post-button {
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      background: #dc3545;
-      color: white;
-      border: none;
-      border-radius: 50%;
-      width: 24px;
-      height: 24px;
-      font-size: 1rem;
-      cursor: pointer;
-    }
-    .delete-all {
-      background: #dc3545;
-      color: white;
-      border: none;
-      padding: 8px 16px;
-      border-radius: 8px;
-      cursor: pointer;
-      margin-top: 10px;
-    }
-  </style>
-</head>
-<body>
-  <header>
-    <h1>שיר אהובה שלנו - המשפחה מחכה לסיפורים!</h1>
-  </header>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>יומן משפחתי - שיר בטיול</title>
+    <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-storage-compat.js"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Varela+Round&family=Caveat&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Varela Round", sans-serif;
+        background: repeating-linear-gradient(
+          #fdfbfb,
+          #fdfbfb 28px,
+          #ebedee 29px,
+          #ebedee 30px
+        );
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-height: 100vh;
+        direction: rtl;
+      }
+      header {
+        width: 100%;
+        background: linear-gradient(to right, #6a11cb, #2575fc);
+        padding: 30px 0;
+        text-align: center;
+        color: white;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      }
+      header h1 {
+        margin: 0;
+        font-size: 2.5rem;
+        font-family: "Caveat", cursive;
+        letter-spacing: 1px;
+      }
+      .tabs {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        background: #ffffffcc;
+        padding: 10px;
+        margin-top: 10px;
+        border-radius: 12px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+      .tab-button {
+        background: #fff;
+        border: 2px solid #6a11cb;
+        color: #6a11cb;
+        margin: 5px;
+        padding: 10px 20px;
+        border-radius: 30px;
+        cursor: pointer;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+      }
+      .tab-button:hover,
+      .tab-button.active {
+        background: #6a11cb;
+        color: white;
+      }
+      .tab-content {
+        display: none;
+        width: 90%;
+        max-width: 900px;
+        background: #ffffffee;
+        margin-top: 20px;
+        padding: 25px;
+        border-radius: 16px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      }
+      .tab-content.active {
+        display: block;
+      }
+      #shir.tab-content {
+        background: #ffe6f0;
+        box-shadow: 0 8px 24px rgba(255, 105, 180, 0.3);
+      }
+      form textarea,
+      form input[type="file"] {
+        width: 100%;
+        margin: 10px 0;
+        padding: 14px;
+        font-size: 1rem;
+        border: 1px solid #ddd;
+        border-radius: 12px;
+        background: #fafafa;
+      }
+      form button,
+      .delete-all {
+        background: #28a745;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 10px;
+        font-size: 1rem;
+        margin-top: 10px;
+        cursor: pointer;
+        transition: background 0.3s;
+      }
+      form button:hover,
+      .delete-all:hover {
+        background: #218838;
+      }
+      .post {
+        background: #fefefe;
+        border-left: 6px solid #6a11cb;
+        padding: 20px;
+        margin: 20px 0;
+        border-radius: 16px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        position: relative;
+      }
+      #shir .post {
+        background: #fff0f5;
+        border-left: 6px solid #ff69b4;
+      }
+      .post img,
+      .post video {
+        max-width: 100%;
+        margin-top: 10px;
+        border-radius: 10px;
+      }
+      .post .timestamp {
+        font-size: 0.8rem;
+        color: #777;
+        margin-top: 10px;
+        text-align: left;
+      }
+      .delete-post-button {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        background: #dc3545;
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 26px;
+        height: 26px;
+        font-size: 1rem;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>שיר אהובה שלנו - יומן מסע משפחתי</h1>
+    </header>
+    <div class="tabs">
+      <button class="tab-button active" data-tab="mom">אמא</button>
+      <button class="tab-button" data-tab="nati">אבא</button>
+      <button class="tab-button" data-tab="nir">ניר</button>
+      <button class="tab-button" data-tab="gil">גיל</button>
+      <button class="tab-button" data-tab="shir">שיר</button>
+      <button class="tab-button" data-tab="aviv">אביב</button>
+      <button class="tab-button" data-tab="itamar">איתמר</button>
+      <button class="tab-button" data-tab="neta">נטע</button>
+      <button class="tab-button" data-tab="max">מקס</button>
+    </div>
+    <div id="mom" class="tab-content active"></div>
+    <div id="nati" class="tab-content"></div>
+    <div id="nir" class="tab-content"></div>
+    <div id="gil" class="tab-content"></div>
+    <div id="shir" class="tab-content"></div>
+    <div id="aviv" class="tab-content"></div>
+    <div id="itamar" class="tab-content"></div>
+    <div id="neta" class="tab-content"></div>
+    <div id="max" class="tab-content"></div>
 
-  <div class="tabs">
-    <button class="tab-button active" data-tab="mom">אמא</button>
-    <button class="tab-button" data-tab="nati">אבא</button>
-    <button class="tab-button" data-tab="nir">ניר</button>
-    <button class="tab-button" data-tab="gil">גיל</button>
-    <button class="tab-button" data-tab="shir">שיר</button>
-    <button class="tab-button" data-tab="aviv">אביב</button>
-    <button class="tab-button" data-tab="itamar">איתמר</button>
-    <button class="tab-button" data-tab="neta">נטע</button>
-    <button class="tab-button" data-tab="max">מקס</button>
-  </div>
+    <script>
+      const firebaseConfig = {
+        apiKey: "AIzaSyDjWYi54AFX0LBhu2czTUmGclJXJ-ArOw0",
+        authDomain: "noiman-family.firebaseapp.com",
+        projectId: "noiman-family",
+        storageBucket: "noiman-family.appspot.com",
+        messagingSenderId: "158896938051",
+        appId: "1:158896938051:web:744ad75f69936546c848f6",
+        databaseURL:
+          "https://noiman-family-default-rtdb.europe-west1.firebasedatabase.app/",
+      };
+      firebase.initializeApp(firebaseConfig);
+      const database = firebase.database();
+      const storage = firebase.storage();
 
-  <div id="mom" class="tab-content active"></div>
-  <div id="nati" class="tab-content"></div>
-  <div id="nir" class="tab-content"></div>
-  <div id="gil" class="tab-content"></div>
-  <div id="shir" class="tab-content"></div>
-  <div id="aviv" class="tab-content"></div>
-  <div id="itamar" class="tab-content"></div>
-  <div id="neta" class="tab-content"></div>
-  <div id="max" class="tab-content"></div>
+      const tabs = document.querySelectorAll(".tab-button");
+      const contents = document.querySelectorAll(".tab-content");
 
-  <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyDjWYi54AFX0LBhu2czTUmGclJXJ-ArOw0",
-      authDomain: "noiman-family.firebaseapp.com",
-      projectId: "noiman-family",
-      storageBucket: "noiman-family.appspot.com",
-      messagingSenderId: "158896938051",
-      appId: "1:158896938051:web:744ad75f69936546c848f6",
-      databaseURL: "https://noiman-family-default-rtdb.europe-west1.firebasedatabase.app/"
-    };
-    firebase.initializeApp(firebaseConfig);
-    const database = firebase.database();
-    const storage = firebase.storage();
-
-    const tabs = document.querySelectorAll('.tab-button');
-    const contents = document.querySelectorAll('.tab-content');
-
-    tabs.forEach(tab => {
-      tab.addEventListener('click', () => {
-        tabs.forEach(t => t.classList.remove('active'));
-        contents.forEach(c => c.classList.remove('active'));
-        tab.classList.add('active');
-        document.getElementById(tab.dataset.tab).classList.add('active');
-      });
-    });
-
-    contents.forEach(content => {
-      const tabId = content.id;
-      const form = document.createElement('form');
-      const textarea = document.createElement('textarea');
-      textarea.placeholder = "כתוב הודעה...";
-      textarea.required = true;
-      const fileInput = document.createElement('input');
-      fileInput.type = "file";
-      fileInput.accept = "image/*,video/*";
-      const button = document.createElement('button');
-      button.type = "submit";
-      button.textContent = "שלח";
-
-      const deleteAll = document.createElement('button');
-      deleteAll.textContent = "🗑️ מחק הכל";
-      deleteAll.className = "delete-all";
-      deleteAll.addEventListener('click', async (e) => {
-        e.preventDefault();
-        if (confirm("אתה בטוח שברצונך למחוק הכל?")) {
-          await database.ref(`posts/${tabId}`).remove();
-        }
+      tabs.forEach((tab) => {
+        tab.addEventListener("click", () => {
+          tabs.forEach((t) => t.classList.remove("active"));
+          contents.forEach((c) => c.classList.remove("active"));
+          tab.classList.add("active");
+          document.getElementById(tab.dataset.tab).classList.add("active");
+        });
       });
 
-      form.appendChild(textarea);
-      form.appendChild(fileInput);
-      form.appendChild(button);
-      content.appendChild(form);
-      content.appendChild(deleteAll);
+      contents.forEach((content) => {
+        const tabId = content.id;
+        const form = document.createElement("form");
+        const textarea = document.createElement("textarea");
+        textarea.placeholder = "כתוב הודעה...";
+        textarea.required = true;
+        const fileInput = document.createElement("input");
+        fileInput.type = "file";
+        fileInput.accept = "image/*,video/*";
+        const button = document.createElement("button");
+        button.type = "submit";
+        button.textContent = "שלח";
 
-      const postsDiv = document.createElement('div');
-      postsDiv.className = "posts";
-      content.appendChild(postsDiv);
-
-      form.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const text = textarea.value.trim();
-        const file = fileInput.files[0];
-
-        if (!text && !file) return;
-
-        let fileUrl = "";
-        let fileType = "";
-
-        if (file) {
-          const storageRef = storage.ref().child(`${tabId}/${Date.now()}_${file.name}`);
-          await storageRef.put(file);
-          fileUrl = await storageRef.getDownloadURL();
-          fileType = file.type;
-        }
-
-        const timestamp = new Date().toISOString();
-
-        await database.ref(`posts/${tabId}`).push({
-          text,
-          file: fileUrl,
-          fileType,
-          timestamp
+        const deleteAll = document.createElement("button");
+        deleteAll.textContent = "🗑️ מחק הכל";
+        deleteAll.className = "delete-all";
+        deleteAll.addEventListener("click", async (e) => {
+          e.preventDefault();
+          if (confirm("אתה בטוח שברצונך למחוק הכל?")) {
+            await database.ref(`posts/${tabId}`).remove();
+          }
         });
 
-        textarea.value = "";
-        fileInput.value = "";
-      });
+        form.appendChild(textarea);
+        form.appendChild(fileInput);
+        form.appendChild(button);
+        content.appendChild(form);
+        content.appendChild(deleteAll);
 
-      database.ref(`posts/${tabId}`).on('value', snapshot => {
-        postsDiv.innerHTML = "";
-        snapshot.forEach(child => {
-          const data = child.val();
-          const post = document.createElement('div');
-          post.className = 'post';
+        const postsDiv = document.createElement("div");
+        postsDiv.className = "posts";
+        content.appendChild(postsDiv);
 
-          const deleteBtn = document.createElement('button');
-          deleteBtn.textContent = '×';
-          deleteBtn.className = 'delete-post-button';
-          deleteBtn.addEventListener('click', async () => {
-            if (confirm("למחוק את הפוסט הזה?")) {
-              await database.ref(`posts/${tabId}/${child.key}`).remove();
-            }
+        form.addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const text = textarea.value.trim();
+          const file = fileInput.files[0];
+
+          if (!text && !file) return;
+
+          let fileUrl = "";
+          let fileType = "";
+
+          if (file) {
+            const storageRef = storage
+              .ref()
+              .child(`${tabId}/${Date.now()}_${file.name}`);
+            await storageRef.put(file);
+            fileUrl = await storageRef.getDownloadURL();
+            fileType = file.type;
+          }
+
+          const timestamp = new Date().toISOString();
+
+          await database.ref(`posts/${tabId}`).push({
+            text,
+            file: fileUrl,
+            fileType,
+            timestamp,
           });
-          post.appendChild(deleteBtn);
 
-          const p = document.createElement('p');
-          p.textContent = data.text;
-          post.appendChild(p);
+          textarea.value = "";
+          fileInput.value = "";
+        });
 
-          if (data.file) {
-            if (data.fileType.startsWith('image/')) {
-              const img = document.createElement('img');
-              img.src = data.file;
-              post.appendChild(img);
-            } else if (data.fileType.startsWith('video/')) {
-              const vid = document.createElement('video');
-              vid.src = data.file;
-              vid.controls = true;
-              post.appendChild(vid);
+        database.ref(`posts/${tabId}`).on("value", (snapshot) => {
+          postsDiv.innerHTML = "";
+          snapshot.forEach((child) => {
+            const data = child.val();
+            const post = document.createElement("div");
+            post.className = "post";
+
+            const deleteBtn = document.createElement("button");
+            deleteBtn.textContent = "×";
+            deleteBtn.className = "delete-post-button";
+            deleteBtn.addEventListener("click", async () => {
+              if (confirm("למחוק את הפוסט הזה?")) {
+                await database.ref(`posts/${tabId}/${child.key}`).remove();
+              }
+            });
+            post.appendChild(deleteBtn);
+
+            const p = document.createElement("p");
+            p.textContent = data.text;
+            post.appendChild(p);
+
+            if (data.file) {
+              if (data.fileType.startsWith("image/")) {
+                const img = document.createElement("img");
+                img.src = data.file;
+                post.appendChild(img);
+              } else if (data.fileType.startsWith("video/")) {
+                const vid = document.createElement("video");
+                vid.src = data.file;
+                vid.controls = true;
+                post.appendChild(vid);
+              }
             }
-          }
 
-          if (data.timestamp) {
-            const time = document.createElement('div');
-            time.className = 'timestamp';
-            const date = new Date(data.timestamp);
-            time.textContent = date.toLocaleString('he-IL');
-            post.appendChild(time);
-          }
+            if (data.timestamp) {
+              const time = document.createElement("div");
+              time.className = "timestamp";
+              const date = new Date(data.timestamp);
+              time.textContent = date.toLocaleString("he-IL");
+              post.appendChild(time);
+            }
 
-          postsDiv.prepend(post);
+            postsDiv.prepend(post);
+          });
         });
       });
-    });
-  </script>
-</body>
+    </script>
+  </body>
 </html>
