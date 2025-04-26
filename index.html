@@ -4,13 +4,16 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>יומן משפחתי - שיר בטיול</title>
+
     <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-database-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-storage-compat.js"></script>
+
     <link
       href="https://fonts.googleapis.com/css2?family=Varela+Round&family=Caveat&display=swap"
       rel="stylesheet"
     />
+
     <style>
       body {
         font-family: "Varela Round", sans-serif;
@@ -31,10 +34,11 @@
       header {
         width: 100%;
         background: linear-gradient(to right, #6a11cb, #2575fc);
-        padding: 30px 0;
+        padding: 30px 0 20px;
         text-align: center;
         color: white;
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        position: relative;
       }
       header h1 {
         margin: 0;
@@ -42,13 +46,37 @@
         font-family: "Caveat", cursive;
         letter-spacing: 1px;
       }
+      .intro-text {
+        margin-top: 10px;
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #333;
+        max-width: 800px;
+        text-align: center;
+        padding: 20px;
+        background: #ffffffcc;
+        border-radius: 12px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        line-height: 1.8;
+      }
+      .date-box {
+        position: absolute;
+        top: 10px;
+        left: 20px;
+        background: #ffffffaa;
+        padding: 8px 16px;
+        border-radius: 12px;
+        font-size: 1rem;
+        color: #333;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
       .tabs {
         display: flex;
         flex-wrap: wrap;
         justify-content: center;
         background: #ffffffcc;
         padding: 10px;
-        margin-top: 10px;
+        margin-top: 20px;
         border-radius: 12px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
       }
@@ -68,6 +96,14 @@
         background: #6a11cb;
         color: white;
       }
+      .tab-button.shir-button {
+        background: #ff69b4;
+        color: white;
+        border: 2px solid #ff69b4;
+        font-weight: bold;
+        font-size: 1.1rem;
+        box-shadow: 0 4px 10px rgba(255, 105, 180, 0.5);
+      }
       .tab-content {
         display: none;
         width: 90%;
@@ -81,10 +117,6 @@
       .tab-content.active {
         display: block;
       }
-      #shir.tab-content {
-        background: #ffe6f0;
-        box-shadow: 0 8px 24px rgba(255, 105, 180, 0.3);
-      }
       form textarea,
       form input[type="file"] {
         width: 100%;
@@ -95,34 +127,45 @@
         border-radius: 12px;
         background: #fafafa;
       }
-      form button,
-      .delete-all {
-        background: #28a745;
-        color: white;
-        border: none;
-        padding: 10px 20px;
-        border-radius: 10px;
-        font-size: 1rem;
+      .form-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
         margin-top: 10px;
+      }
+      .submit-button,
+      .clear-file-button {
+        min-width: 120px;
+        padding: 10px 20px;
+        font-size: 1rem;
+        border: none;
+        border-radius: 10px;
         cursor: pointer;
         transition: background 0.3s;
       }
-      form button:hover,
-      .delete-all:hover {
+      .submit-button {
+        background: #28a745;
+        color: white;
+      }
+      .submit-button:hover {
         background: #218838;
       }
+      .clear-file-button {
+        background: #007bff;
+        color: white;
+      }
+      .clear-file-button:hover {
+        background: #0069d9;
+      }
       .post {
-        background: #fefefe;
-        border-left: 6px solid #6a11cb;
+        background: #fff8b0;
         padding: 20px;
         margin: 20px 0;
         border-radius: 16px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.15);
         position: relative;
-      }
-      #shir .post {
-        background: #fff0f5;
-        border-left: 6px solid #ff69b4;
+        transform: rotate(-1deg);
+        animation: fadeInSlide 0.5s ease;
       }
       .post img,
       .post video {
@@ -149,28 +192,47 @@
         font-size: 1rem;
         cursor: pointer;
       }
+      @keyframes fadeInSlide {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
     </style>
   </head>
+
   <body>
     <header>
       <h1>שיר אהובה שלנו - יומן מסע משפחתי</h1>
+      <div class="date-box" id="dateBox"></div>
+      <p class="intro-text">
+        האתר הזה נוצר במיוחד עבורך שיר שלנו, כדי שנוכל ללוות אותך מרחוק בכל
+        חוויות הטיול. כל אחד מאיתנו יספר כאן מה עובר עליו, יכתוב ברכות ואהבה,
+        ואת מוזמנת גם לשתף אותנו במסע המופלא שלך. 💖
+      </p>
     </header>
+
     <div class="tabs">
-      <button class="tab-button active" data-tab="mom">אמא</button>
+      <button class="tab-button" data-tab="mom">אמא</button>
       <button class="tab-button" data-tab="nati">אבא</button>
       <button class="tab-button" data-tab="nir">ניר</button>
       <button class="tab-button" data-tab="gil">גיל</button>
-      <button class="tab-button" data-tab="shir">שיר</button>
+      <button class="tab-button shir-button active" data-tab="shir">שיר</button>
       <button class="tab-button" data-tab="aviv">אביב</button>
       <button class="tab-button" data-tab="itamar">איתמר</button>
       <button class="tab-button" data-tab="neta">נטע</button>
       <button class="tab-button" data-tab="max">מקס</button>
     </div>
-    <div id="mom" class="tab-content active"></div>
+
+    <div id="mom" class="tab-content"></div>
     <div id="nati" class="tab-content"></div>
     <div id="nir" class="tab-content"></div>
     <div id="gil" class="tab-content"></div>
-    <div id="shir" class="tab-content"></div>
+    <div id="shir" class="tab-content active"></div>
     <div id="aviv" class="tab-content"></div>
     <div id="itamar" class="tab-content"></div>
     <div id="neta" class="tab-content"></div>
@@ -209,28 +271,35 @@
         const textarea = document.createElement("textarea");
         textarea.placeholder = "כתוב הודעה...";
         textarea.required = true;
+
         const fileInput = document.createElement("input");
         fileInput.type = "file";
         fileInput.accept = "image/*,video/*";
-        const button = document.createElement("button");
-        button.type = "submit";
-        button.textContent = "שלח";
 
-        const deleteAll = document.createElement("button");
-        deleteAll.textContent = "🗑️ מחק הכל";
-        deleteAll.className = "delete-all";
-        deleteAll.addEventListener("click", async (e) => {
+        const formButtons = document.createElement("div");
+        formButtons.className = "form-buttons";
+
+        const clearFileButton = document.createElement("button");
+        clearFileButton.type = "button";
+        clearFileButton.className = "clear-file-button";
+        clearFileButton.textContent = "נקה קובץ";
+        clearFileButton.addEventListener("click", (e) => {
           e.preventDefault();
-          if (confirm("אתה בטוח שברצונך למחוק הכל?")) {
-            await database.ref(`posts/${tabId}`).remove();
-          }
+          fileInput.value = "";
         });
+
+        const submitButton = document.createElement("button");
+        submitButton.type = "submit";
+        submitButton.className = "submit-button";
+        submitButton.textContent = "שלח";
+
+        formButtons.appendChild(clearFileButton);
+        formButtons.appendChild(submitButton);
 
         form.appendChild(textarea);
         form.appendChild(fileInput);
-        form.appendChild(button);
+        form.appendChild(formButtons);
         content.appendChild(form);
-        content.appendChild(deleteAll);
 
         const postsDiv = document.createElement("div");
         postsDiv.className = "posts";
@@ -240,7 +309,6 @@
           e.preventDefault();
           const text = textarea.value.trim();
           const file = fileInput.files[0];
-
           if (!text && !file) return;
 
           let fileUrl = "";
@@ -262,6 +330,7 @@
             file: fileUrl,
             fileType,
             timestamp,
+            comments: [],
           });
 
           textarea.value = "";
@@ -302,17 +371,60 @@
               }
             }
 
-            if (data.timestamp) {
-              const time = document.createElement("div");
-              time.className = "timestamp";
-              const date = new Date(data.timestamp);
-              time.textContent = date.toLocaleString("he-IL");
-              post.appendChild(time);
+            const time = document.createElement("div");
+            time.className = "timestamp";
+            time.textContent = new Date(data.timestamp).toLocaleString("he-IL");
+            post.appendChild(time);
+
+            // תגובות
+            const commentBtn = document.createElement("button");
+            commentBtn.className = "clear-file-button";
+            commentBtn.style.marginTop = "10px";
+            commentBtn.textContent = "💬 הגב";
+            post.appendChild(commentBtn);
+
+            const commentsDiv = document.createElement("div");
+            commentsDiv.style.marginTop = "10px";
+            post.appendChild(commentsDiv);
+
+            if (data.comments) {
+              data.comments.forEach((cmt) => {
+                const comment = document.createElement("div");
+                comment.style.marginTop = "5px";
+                comment.innerHTML = `<strong>${cmt.name}:</strong> ${cmt.text}`;
+                commentsDiv.appendChild(comment);
+              });
             }
+
+            commentBtn.addEventListener("click", () => {
+              const name = prompt("מה שמך?");
+              if (!name) return;
+              const commentText = prompt("כתוב תגובה:");
+              if (!commentText) return;
+
+              database
+                .ref(`posts/${tabId}/${child.key}/comments`)
+                .once("value", (snap) => {
+                  const comments = snap.val() || [];
+                  comments.push({ name: name, text: commentText });
+                  database
+                    .ref(`posts/${tabId}/${child.key}/comments`)
+                    .set(comments);
+                });
+            });
 
             postsDiv.prepend(post);
           });
         });
+      });
+
+      // תאריך יומי בראש
+      const dateBox = document.getElementById("dateBox");
+      const today = new Date();
+      dateBox.textContent = today.toLocaleDateString("he-IL", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
       });
     </script>
   </body>
