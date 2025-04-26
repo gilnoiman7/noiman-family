@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>יומן משפחתי - שיר בטיול</title>
+    <title>יומן משפחתי לשיר</title>
 
     <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-database-compat.js"></script>
@@ -168,7 +168,8 @@
         animation: fadeInSlide 0.5s ease;
       }
       .post img,
-      .post video {
+      .post video,
+      .post audio {
         max-width: 100%;
         margin-top: 10px;
         border-radius: 10px;
@@ -255,6 +256,18 @@
 
       const tabs = document.querySelectorAll(".tab-button");
       const contents = document.querySelectorAll(".tab-content");
+
+      const familyColors = {
+        mom: "#ffb6c1",
+        nati: "#add8e6",
+        nir: "#ffcc99",
+        gil: "#90ee90",
+        shir: "#dda0dd",
+        aviv: "#87ceeb",
+        itamar: "#40e0d0",
+        neta: "#dda0dd",
+        max: "#a9a9a9",
+      };
 
       tabs.forEach((tab) => {
         tab.addEventListener("click", () => {
@@ -343,6 +356,7 @@
             const data = child.val();
             const post = document.createElement("div");
             post.className = "post";
+            post.style.background = familyColors[tabId] || "#fff8b0";
 
             const deleteBtn = document.createElement("button");
             deleteBtn.textContent = "×";
@@ -388,29 +402,39 @@
             post.appendChild(commentsDiv);
 
             if (data.comments) {
-              data.comments.forEach((cmt) => {
+              data.comments.forEach((cmt, idx) => {
                 const comment = document.createElement("div");
                 comment.style.marginTop = "5px";
-                comment.innerHTML = `<strong>${cmt.name}:</strong> ${cmt.text}`;
+                comment.innerHTML = `<strong>${cmt.name}:</strong> ${
+                  cmt.text || ""
+                } ❤️ ${cmt.likes || 0}`;
+
+                const likeBtn = document.createElement("button");
+                likeBtn.textContent = "❤️";
+                likeBtn.style.marginRight = "10px";
+                likeBtn.addEventListener("click", async () => {
+                  const updatedLikes = (cmt.likes || 0) + 1;
+                  data.comments[idx].likes = updatedLikes;
+                  await database
+                    .ref(`posts/${tabId}/${child.key}/comments`)
+                    .set(data.comments);
+                });
+                comment.appendChild(likeBtn);
                 commentsDiv.appendChild(comment);
               });
             }
 
-            commentBtn.addEventListener("click", () => {
+            commentBtn.addEventListener("click", async () => {
               const name = prompt("מה שמך?");
               if (!name) return;
               const commentText = prompt("כתוב תגובה:");
               if (!commentText) return;
 
-              database
+              data.comments = data.comments || [];
+              data.comments.push({ name, text: commentText, likes: 0 });
+              await database
                 .ref(`posts/${tabId}/${child.key}/comments`)
-                .once("value", (snap) => {
-                  const comments = snap.val() || [];
-                  comments.push({ name: name, text: commentText });
-                  database
-                    .ref(`posts/${tabId}/${child.key}/comments`)
-                    .set(comments);
-                });
+                .set(data.comments);
             });
 
             postsDiv.prepend(post);
@@ -418,7 +442,7 @@
         });
       });
 
-      // תאריך יומי בראש
+      // תאריך יומי
       const dateBox = document.getElementById("dateBox");
       const today = new Date();
       dateBox.textContent = today.toLocaleDateString("he-IL", {
