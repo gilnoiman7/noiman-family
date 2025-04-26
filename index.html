@@ -17,12 +17,7 @@
     <style>
       body {
         font-family: "Varela Round", sans-serif;
-        background: repeating-linear-gradient(
-          #fdfbfb,
-          #fdfbfb 28px,
-          #ebedee 29px,
-          #ebedee 30px
-        );
+        background: repeating-linear-gradient(#fdfbfb, #ebedee 10px);
         margin: 0;
         padding: 0;
         display: flex;
@@ -34,21 +29,21 @@
       header {
         width: 100%;
         background: linear-gradient(to right, #6a11cb, #2575fc);
-        padding: 30px 0 20px;
+        padding: 20px 0;
         text-align: center;
         color: white;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         position: relative;
       }
       header h1 {
         margin: 0;
-        font-size: 2.5rem;
+        font-size: 2.7rem;
         font-family: "Caveat", cursive;
         letter-spacing: 1px;
       }
       .intro-text {
         margin-top: 10px;
-        font-size: 1.5rem;
+        font-size: 1.4rem;
         font-weight: bold;
         color: #333;
         max-width: 800px;
@@ -57,8 +52,31 @@
         background: #ffffffcc;
         border-radius: 12px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        line-height: 1.8;
+        line-height: 1.7;
       }
+      /* גלריית תמונות */
+      .gallery {
+        margin-top: 20px;
+        margin-bottom: 20px;
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        flex-wrap: wrap;
+      }
+
+      .gallery img {
+        width: 120px;
+        height: 120px;
+        object-fit: cover;
+        border-radius: 16px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        transition: transform 0.3s ease;
+      }
+
+      .gallery img:hover {
+        transform: scale(1.05);
+      }
+
       .date-box {
         position: absolute;
         top: 10px;
@@ -81,7 +99,7 @@
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
       }
       .tab-button {
-        background: #fff;
+        background: white;
         border: 2px solid #6a11cb;
         color: #6a11cb;
         margin: 5px;
@@ -95,6 +113,7 @@
       .tab-button.active {
         background: #6a11cb;
         color: white;
+        transform: scale(1.05);
       }
       .tab-button.shir-button {
         background: #ff69b4;
@@ -104,6 +123,51 @@
         font-size: 1.1rem;
         box-shadow: 0 4px 10px rgba(255, 105, 180, 0.5);
       }
+      .tab-button.mom-button:hover {
+        background-color: #ffb6c1;
+        color: #fff;
+      }
+
+      .tab-button.nati-button:hover {
+        background-color: #add8e6;
+        color: #333;
+      }
+
+      .tab-button.nir-button:hover {
+        background-color: #ffcc99;
+        color: #333;
+      }
+
+      .tab-button.gil-button:hover {
+        background-color: #90ee90;
+        color: #333;
+      }
+
+      .tab-button.shir-button:hover {
+        background-color: #ff69b4;
+        color: #fff;
+      }
+
+      .tab-button.aviv-button:hover {
+        background-color: #87ceeb;
+        color: #333;
+      }
+
+      .tab-button.itamar-button:hover {
+        background-color: #40e0d0;
+        color: #fff;
+      }
+
+      .tab-button.neta-button:hover {
+        background-color: #dda0dd;
+        color: #333;
+      }
+
+      .tab-button.max-button:hover {
+        background-color: #d3d3d3;
+        color: #333;
+      }
+
       .tab-content {
         display: none;
         width: 90%;
@@ -113,20 +177,62 @@
         padding: 25px;
         border-radius: 16px;
         box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        animation: fadeIn 0.5s ease;
       }
       .tab-content.active {
         display: block;
       }
-      form textarea,
-      form input[type="file"] {
-        width: 100%;
-        margin: 10px 0;
-        padding: 14px;
-        font-size: 1rem;
-        border: 1px solid #ddd;
-        border-radius: 12px;
-        background: #fafafa;
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
       }
+      form textarea {
+        width: 100%;
+        margin: 12px 0;
+        padding: 16px;
+        font-size: 1.2rem;
+        border: 2px solid #a78bfa; /* סגול-עדין */
+        border-radius: 18px;
+        background: linear-gradient(135deg, #ffffff, #f8f9fa);
+        min-height: 140px;
+        resize: vertical;
+        transition: all 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+      }
+
+      form textarea:focus {
+        background: #ffffff;
+        border-color: #7c3aed; /* יותר סגול חי */
+        box-shadow: 0 0 10px rgba(124, 58, 237, 0.4);
+        outline: none;
+      }
+
+      /* עיצוב חדש לכפתור העלאת קבצים */
+      input[type="file"] {
+        margin-top: 12px;
+        padding: 12px 16px;
+        font-size: 1rem;
+        border: 2px dashed #38bdf8; /* תכלת עדין */
+        border-radius: 16px;
+        background: linear-gradient(135deg, #e0f7ff, #ffffff);
+        color: #0ea5e9; /* כחול תכלת */
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: inline-block;
+      }
+
+      input[type="file"]:hover {
+        background: linear-gradient(135deg, #c0ebff, #e0f7ff);
+        border-color: #0ea5e9;
+        color: #0284c7;
+      }
+
       .form-buttons {
         display: flex;
         justify-content: center;
@@ -141,7 +247,7 @@
         border: none;
         border-radius: 10px;
         cursor: pointer;
-        transition: background 0.3s;
+        transition: transform 0.2s, background 0.3s;
       }
       .submit-button {
         background: #28a745;
@@ -149,13 +255,29 @@
       }
       .submit-button:hover {
         background: #218838;
+        transform: scale(1.05);
       }
       .clear-file-button {
-        background: #007bff;
-        color: white;
+        background: #ffc107;
+        color: #333;
       }
       .clear-file-button:hover {
-        background: #0069d9;
+        background: #e0a800;
+        transform: scale(1.05);
+      }
+      .delete-all {
+        background: #dc3545;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 10px;
+        cursor: pointer;
+        margin-top: 10px;
+        font-size: 1rem;
+        transition: background 0.3s;
+      }
+      .delete-all:hover {
+        background: #c82333;
       }
       .post {
         background: #fff8b0;
@@ -164,12 +286,10 @@
         border-radius: 16px;
         box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.15);
         position: relative;
-        transform: rotate(-1deg);
-        animation: fadeInSlide 0.5s ease;
+        animation: fadeIn 0.5s ease;
       }
       .post img,
-      .post video,
-      .post audio {
+      .post video {
         max-width: 100%;
         margin-top: 10px;
         border-radius: 10px;
@@ -193,14 +313,16 @@
         font-size: 1rem;
         cursor: pointer;
       }
-      @keyframes fadeInSlide {
-        from {
-          opacity: 0;
-          transform: translateY(20px);
+      @media (max-width: 600px) {
+        .tab-button {
+          padding: 8px 14px;
+          font-size: 0.9rem;
         }
-        to {
-          opacity: 1;
-          transform: translateY(0);
+        form textarea {
+          font-size: 1rem;
+        }
+        .intro-text {
+          font-size: 1.2rem;
         }
       }
     </style>
@@ -216,17 +338,43 @@
         ואת מוזמנת גם לשתף אותנו במסע המופלא שלך. 💖
       </p>
     </header>
+    <!-- טוסט הודעה -->
+    <div
+      id="toast"
+      style="
+        display: none;
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: #28a745;
+        color: white;
+        padding: 12px 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        z-index: 9999;
+        font-size: 1rem;
+      "
+    >
+      ✔️ ההודעה נשלחה בהצלחה!
+    </div>
+
+    <!-- גלריית תמונות -->
+    <div class="gallery">
+      <img src="1.jpg" alt="תמונה 1" />
+      <img src="2.jpg" alt="תמונה 2" />
+      <img src="3.jpg" alt="תמונה 3" />
+    </div>
 
     <div class="tabs">
-      <button class="tab-button" data-tab="mom">אמא</button>
-      <button class="tab-button" data-tab="nati">אבא</button>
-      <button class="tab-button" data-tab="nir">ניר</button>
-      <button class="tab-button" data-tab="gil">גיל</button>
+      <button class="tab-button mom-button" data-tab="mom">אמא</button>
+      <button class="tab-button nati-button" data-tab="nati">אבא</button>
+      <button class="tab-button nir-button" data-tab="nir">ניר</button>
+      <button class="tab-button gil-button" data-tab="gil">גיל</button>
       <button class="tab-button shir-button active" data-tab="shir">שיר</button>
-      <button class="tab-button" data-tab="aviv">אביב</button>
-      <button class="tab-button" data-tab="itamar">איתמר</button>
-      <button class="tab-button" data-tab="neta">נטע</button>
-      <button class="tab-button" data-tab="max">מקס</button>
+      <button class="tab-button aviv-button" data-tab="aviv">אביב</button>
+      <button class="tab-button itamar-button" data-tab="itamar">איתמר</button>
+      <button class="tab-button neta-button" data-tab="neta">נטע</button>
+      <button class="tab-button max-button" data-tab="max">מקס</button>
     </div>
 
     <div id="mom" class="tab-content"></div>
@@ -342,6 +490,8 @@
                 timestamp,
                 comments: [],
               });
+              // אחרי שמעלים פוסט:
+              showToast();
 
               textarea.value = "";
               fileInput.value = "";
@@ -462,6 +612,13 @@
         month: "long",
         year: "numeric",
       });
+      function showToast() {
+        const toast = document.getElementById("toast");
+        toast.style.display = "block";
+        setTimeout(() => {
+          toast.style.display = "none";
+        }, 2000);
+      }
     </script>
   </body>
 </html>
