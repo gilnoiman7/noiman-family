@@ -324,30 +324,42 @@
           const file = fileInput.files[0];
           if (!text && !file) return;
 
-          let fileUrl = "";
+          let fileData = "";
           let fileType = "";
 
           if (file) {
-            const storageRef = storage
-              .ref()
-              .child(`${tabId}/${Date.now()}_${file.name}`);
-            await storageRef.put(file);
-            fileUrl = await storageRef.getDownloadURL();
-            fileType = file.type;
+            const reader = new FileReader();
+            reader.onloadend = async () => {
+              fileData = reader.result; // base64 string with data:image/... prefix
+              fileType = file.type;
+
+              const timestamp = new Date().toISOString();
+
+              await database.ref(`posts/${tabId}`).push({
+                text,
+                file: fileData,
+                fileType,
+                timestamp,
+                comments: [],
+              });
+
+              textarea.value = "";
+              fileInput.value = "";
+            };
+            reader.readAsDataURL(file);
+          } else {
+            const timestamp = new Date().toISOString();
+            await database.ref(`posts/${tabId}`).push({
+              text,
+              file: "",
+              fileType: "",
+              timestamp,
+              comments: [],
+            });
+
+            textarea.value = "";
+            fileInput.value = "";
           }
-
-          const timestamp = new Date().toISOString();
-
-          await database.ref(`posts/${tabId}`).push({
-            text,
-            file: fileUrl,
-            fileType,
-            timestamp,
-            comments: [],
-          });
-
-          textarea.value = "";
-          fileInput.value = "";
         });
 
         database.ref(`posts/${tabId}`).on("value", (snapshot) => {
